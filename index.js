@@ -3,8 +3,12 @@ const app = express();
 require('dotenv').config();
 const hbs = require('express-handlebars');
 const path = require('path');
-const getWeather = require('./lib/openweathermap');
+const bodyParser = require('body-parser');
+const weatherAPI = require('./lib/openweathermap');
+const getWeather = weatherAPI.getWeather;
 
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.engine('.hbs', hbs({
@@ -13,11 +17,27 @@ app.engine('.hbs', hbs({
 }));
 app.set('view engine', '.hbs');
 
-app.get('/', async (req, res) => {
-	const data = await getWeather();
-	// let temp = data.main.temp;
-	// let name = data.name;
+app.get('/', (req, res) => {
+	// const data = await getWeather();
+	// // let temp = data.main.temp;
+	// // let name = data.name;
 
+	// let weatherInfo = {
+	// 	"Name": data.name,
+	// 	"Country": data.sys.country,
+	// 	"Description": data.weather[0].description,
+	// 	"Temp (K)": data.main.temp,
+	// 	"Feels like": data.main.feels_like
+	// }
+
+	// res.render('index', { weatherInfo });
+
+	res.render('index');
+});
+
+app.post('/weather', async (req, res) => {
+	const city = req.body.city;
+	const data = await getWeather(city);
 	let weatherInfo = {
 		"Name": data.name,
 		"Country": data.sys.country,
@@ -25,7 +45,6 @@ app.get('/', async (req, res) => {
 		"Temp (K)": data.main.temp,
 		"Feels like": data.main.feels_like
 	}
-
 	res.render('index', { weatherInfo });
 });
 

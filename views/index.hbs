@@ -1,5 +1,14 @@
+<h1>Weather by City</h1>
+
+<form action="/weather" method="post">
+	<input type="text" name="city" id="city">
+	<input type="submit" value="submit">
+</form>
+
 <div class="weather">
+	{{#if weatherInfo}}
 	{{#each weatherInfo}}
 	<li>{{@key}}: {{this}}</li>
 	{{/each}}
+	{{/if}}
 </div>
