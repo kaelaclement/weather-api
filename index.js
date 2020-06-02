@@ -35,15 +35,15 @@ app.get('/', (req, res) => {
 	res.render('index');
 });
 
-app.post('/weather', async (req, res) => {
+app.post('/', async (req, res) => {
 	const city = req.body.city;
 	const data = await getWeather(city);
 	let weatherInfo = {
 		"Name": data.name,
 		"Country": data.sys.country,
 		"Description": data.weather[0].description,
-		"Temp (K)": data.main.temp,
-		"Feels like": data.main.feels_like
+		"Temp (C)": Math.round(data.main.temp - 273.15),
+		"Feels like (C)": Math.round(data.main.feels_like - 273.15)
 	}
 	res.render('index', { weatherInfo });
 });
